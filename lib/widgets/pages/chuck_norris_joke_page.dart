@@ -9,26 +9,12 @@ class ChuckNorrisJokePage extends StatefulWidget {
 }
 
 class _ChuckNorrisJokesPageState extends State<ChuckNorrisJokePage> {
-  String? joke;
-
   void _like() {
-    setState(() {
-      if (joke == null) {
-        joke = "The quick brown fox jumps over the lazy dog";
-      } else {
-        joke = null;
-      }
-    });
+    setState(() {});
   }
 
   void _openInBrowser() {
-    setState(() {
-      if (joke == null) {
-        joke = "The quick brown fox jumps over the lazy dog";
-      } else {
-        joke = null;
-      }
-    });
+    setState(() {});
   }
 
   @override
@@ -44,11 +30,9 @@ class _ChuckNorrisJokesPageState extends State<ChuckNorrisJokePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Expanded(
+              const Expanded(
                 child: Center(
-                  child: joke != null
-                      ? ChuckNorrisJokeCard(text: joke!)
-                      : const CircularProgressIndicator(),
+                  child: ChuckNorrisJokeCard(),
                 ),
               ),
               Wrap(

@@ -1,8 +1,18 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:cnj/models/chuck_norris_joke.dart';
+
+final _jokeApiUrl = Uri.parse("https://api.chucknorris.io/jokes/random");
+
+Future<ChuckNorrisJoke> _fetchRandomJoke() async {
+  final response = await http.get(_jokeApiUrl);
+  return ChuckNorrisJoke.fromJson(
+      jsonDecode(response.body) as Map<String, Object?>);
+}
 
 class ChuckNorrisJokeCard extends StatelessWidget {
-  final String text;
-  const ChuckNorrisJokeCard({Key? key, required this.text}) : super(key: key);
+  const ChuckNorrisJokeCard({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,11 +32,20 @@ class ChuckNorrisJokeCard extends StatelessWidget {
               children: [
                 Image.network(
                   "https://api.chucknorris.io/img/chucknorris_logo_coloured_small@2x.png",
-                ), // TODO: asset
-                Text(
-                  "Anthony Weiner resigned from congress and immediately committed suicide after learning that he had also accidently sent a twit to Chuck Norris.",
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.headline5,
+                ),
+                FutureBuilder<ChuckNorrisJoke>(
+                  future: _fetchRandomJoke(),
+                  builder: (context, snapshot) {
+                    final data = snapshot.data;
+                    if (data == null) {
+                      return const CircularProgressIndicator();
+                    }
+                    return Text(
+                      data.value,
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.headline5,
+                    );
+                  },
                 ),
               ],
             ),

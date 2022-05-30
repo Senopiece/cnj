@@ -12,6 +12,6 @@ class ChuckNorrisJoke with _$ChuckNorrisJoke {
     required String value,
   }) = _ChuckNorrisJoke;
 
-  factory ChuckNorrisJoke.fromJson(Map<String, dynamic> json) =>
+  factory ChuckNorrisJoke.fromJson(Map<String, Object?> json) =>
       _$ChuckNorrisJokeFromJson(json);
 }
