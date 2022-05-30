@@ -12,7 +12,7 @@ class ChuckNorrisJokeApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: "Chuck Norris jokes!",
-      theme: ThemeData.dark(),
+      theme: ThemeData.light(),
       home: const ChuckNorrisJokePage(),
     );
   }
