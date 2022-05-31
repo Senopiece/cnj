@@ -1,23 +1,16 @@
 import 'package:flutter/material.dart';
 
 class ScaleButton extends StatefulWidget {
+  final Duration duration;
+  final VoidCallback? onTap;
+  final Widget child;
+
   const ScaleButton({
     Key? key,
     this.duration = const Duration(milliseconds: 40),
     this.onTap,
     required this.child,
   }) : super(key: key);
-
-  /// Adjust the animation speed
-  ///
-  /// Defaults to [300]
-  final Duration duration;
-
-  /// Called when the user taps this part of the material.
-  final VoidCallback? onTap;
-
-  /// The widget below this widget in the tree.
-  final Widget child;
 
   @override
   State<ScaleButton> createState() => _ScaleButtonState();
@@ -27,26 +20,6 @@ class _ScaleButtonState extends State<ScaleButton>
     with SingleTickerProviderStateMixin {
   double _scale = 1.0;
   late AnimationController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: widget.duration,
-      upperBound: 0.1,
-    )..addListener(() {
-        setState(() {
-          _scale = 1 - _controller.value;
-        });
-      });
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,5 +51,25 @@ class _ScaleButtonState extends State<ScaleButton>
         child: widget.child,
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: widget.duration,
+      upperBound: 0.1,
+    )..addListener(() {
+        setState(() {
+          _scale = 1 - _controller.value;
+        });
+      });
   }
 }

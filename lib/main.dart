@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'widgets/pages/chuck_norris_joke_page.dart';
 
-// TODO: orginize all imports
+import 'widgets/pages/chuck_norris_joke_page.dart';
 
 void main() {
   runApp(const ChuckNorrisJokeApp());

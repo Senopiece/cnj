@@ -1,17 +1,18 @@
+import 'dart:convert';
 import 'dart:math';
 
+import 'package:cnj/models/chuck_norris_joke.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:swipable_stack/swipable_stack.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:http/http.dart' as http;
-import 'package:cnj/models/chuck_norris_joke.dart';
+
 import '../image_text_card.dart';
-import 'dart:convert';
 import '../scale_button.dart';
 
-final _jokeApiUrl = Uri.parse("https://api.chucknorris.io/jokes/random");
 const _logoUrl =
     "https://api.chucknorris.io/img/chucknorris_logo_coloured_small@2x.png";
+final _jokeApiUrl = Uri.parse("https://api.chucknorris.io/jokes/random");
 
 Future<ChuckNorrisJoke> _fetchRandomJoke() async {
   ChuckNorrisJoke joke;
@@ -38,32 +39,6 @@ class _ChuckNorrisJokesPageState extends State<ChuckNorrisJokePage> {
   int? _topIndex;
   bool _liked = false;
   bool _likeSwapDirection = false;
-
-  void _like() {
-    setState(() {
-      _likeSwapDirection = !_likeSwapDirection;
-      _controller.next(
-        swipeDirection:
-            _likeSwapDirection ? SwipeDirection.right : SwipeDirection.left,
-      );
-    });
-  }
-
-  Future<void> _openInBrowser() async {
-    await launchUrl(Uri.parse(_preparedCards[_topIndex]!.url));
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = SwipableStackController();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _controller.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -197,5 +172,31 @@ class _ChuckNorrisJokesPageState extends State<ChuckNorrisJokePage> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = SwipableStackController();
+  }
+
+  void _like() {
+    setState(() {
+      _likeSwapDirection = !_likeSwapDirection;
+      _controller.next(
+        swipeDirection:
+            _likeSwapDirection ? SwipeDirection.right : SwipeDirection.left,
+      );
+    });
+  }
+
+  Future<void> _openInBrowser() async {
+    await launchUrl(Uri.parse(_preparedCards[_topIndex]!.url));
   }
 }
