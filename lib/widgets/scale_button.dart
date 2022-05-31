@@ -3,13 +3,10 @@ import 'package:flutter/material.dart';
 class ScaleButton extends StatefulWidget {
   const ScaleButton({
     Key? key,
-    Duration duration = const Duration(milliseconds: 40),
-    VoidCallback? onTap,
-    required Widget child,
-  })  : this.duration = duration,
-        this.onTap = onTap,
-        this.child = child,
-        super(key: key);
+    this.duration = const Duration(milliseconds: 40),
+    this.onTap,
+    required this.child,
+  }) : super(key: key);
 
   /// Adjust the animation speed
   ///
@@ -23,7 +20,7 @@ class ScaleButton extends StatefulWidget {
   final Widget child;
 
   @override
-  _ScaleButtonState createState() => _ScaleButtonState();
+  State<ScaleButton> createState() => _ScaleButtonState();
 }
 
 class _ScaleButtonState extends State<ScaleButton>
