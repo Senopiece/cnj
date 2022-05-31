@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:swipable_stack/swipable_stack.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -5,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:cnj/models/chuck_norris_joke.dart';
 import '../image_text_card.dart';
 import 'dart:convert';
+import '../scale_button.dart';
 
 final _jokeApiUrl = Uri.parse("https://api.chucknorris.io/jokes/random");
 const _logoUrl =
@@ -17,7 +20,7 @@ Future<ChuckNorrisJoke> _fetchRandomJoke() async {
     final response = await http.get(_jokeApiUrl);
     joke = ChuckNorrisJoke.fromJson(
         jsonDecode(response.body) as Map<String, Object?>);
-  } while (joke.value.length > 40);
+  } while (joke.value.length > 120);
 
   return joke;
 }
@@ -33,6 +36,7 @@ class _ChuckNorrisJokesPageState extends State<ChuckNorrisJokePage> {
   late final SwipableStackController _controller;
   final Map<int, ChuckNorrisJoke?> _preparedCards = {};
   int? _topIndex;
+  bool _liked = false;
   bool _likeSwapDirection = false;
 
   void _like() {
@@ -73,6 +77,7 @@ class _ChuckNorrisJokesPageState extends State<ChuckNorrisJokePage> {
             children: [
               Expanded(
                 child: SwipableStack(
+                  stackClipBehaviour: Clip.none,
                   swipeAnchor: SwipeAnchor.bottom,
                   controller: _controller,
                   allowVerticalSwipe: false,
@@ -82,6 +87,7 @@ class _ChuckNorrisJokesPageState extends State<ChuckNorrisJokePage> {
                       (value) {
                         setState(() {
                           _topIndex = _controller.currentIndex;
+                          _liked = false;
                         });
                       },
                     );
@@ -100,15 +106,16 @@ class _ChuckNorrisJokesPageState extends State<ChuckNorrisJokePage> {
                       _fetchRandomJoke().then((joke) {
                         setState(() {
                           _preparedCards[properties.index] = joke;
+                          _topIndex = _controller.currentIndex;
                         });
                       });
                     }
 
                     if (properties.stackIndex == 0) {
-                      return AnimatedOpacity(
-                        opacity: 1,
-                        duration: const Duration(milliseconds: 200),
-                        child: Center(
+                      return Center(
+                        child: AnimatedOpacity(
+                          opacity: 1,
+                          duration: const Duration(milliseconds: 100),
                           child: ImageTextCard(
                             image: const NetworkImage(_logoUrl),
                             text: _preparedCards[properties.index]?.value,
@@ -117,10 +124,10 @@ class _ChuckNorrisJokesPageState extends State<ChuckNorrisJokePage> {
                       );
                     }
 
-                    return AnimatedOpacity(
-                      opacity: 0,
-                      duration: const Duration(milliseconds: 0),
-                      child: Center(
+                    return Center(
+                      child: AnimatedOpacity(
+                        opacity: 0,
+                        duration: const Duration(milliseconds: 0),
                         child: ImageTextCard(
                           image: const NetworkImage(_logoUrl),
                           text: _preparedCards[properties.index]?.value,
@@ -130,25 +137,59 @@ class _ChuckNorrisJokesPageState extends State<ChuckNorrisJokePage> {
                   },
                 ),
               ),
-              Wrap(
-                spacing: 20,
-                alignment: WrapAlignment.center,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // TODO: like icon + icon animation
-                  IconButton(
-                    icon: const Icon(Icons.open_in_browser_rounded),
-                    iconSize: 33,
-                    tooltip: "open in browser",
-                    onPressed: _preparedCards[_topIndex] != null
-                        ? _openInBrowser
-                        : null,
+                  ScaleButton(
+                    onTap: _openInBrowser,
+                    child: Icon(
+                      Icons.open_in_browser_rounded,
+                      size: 35,
+                      color: _preparedCards[_topIndex] == null
+                          ? Colors.grey
+                          : Colors.black,
+                    ),
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.favorite_border_rounded),
-                    iconSize: 33,
-                    tooltip: "like",
-                    onPressed: _preparedCards[_topIndex] != null ? _like : null,
-                  ),
+                  const SizedBox(width: 50),
+                  _liked
+                      ? AnimatedRotation(
+                          turns: -0.003 * 2 * pi,
+                          duration: const Duration(milliseconds: 50),
+                          child: ScaleButton(
+                            child: Icon(
+                              Icons.thumb_up_rounded,
+                              color: _preparedCards[_topIndex] == null
+                                  ? Colors.grey
+                                  : Colors.deepOrangeAccent,
+                              size: 35,
+                            ),
+                          ),
+                        )
+                      : AnimatedRotation(
+                          turns: 0,
+                          duration: const Duration(milliseconds: 60),
+                          child: ScaleButton(
+                            onTap: () {
+                              setState(() {
+                                _liked = true;
+                                Future.delayed(
+                                        const Duration(milliseconds: 400))
+                                    .then(
+                                  (value) {
+                                    _like();
+                                  },
+                                );
+                              });
+                            },
+                            child: Icon(
+                              Icons.thumb_up_rounded,
+                              color: _preparedCards[_topIndex] == null
+                                  ? Colors.grey
+                                  : Colors.black,
+                              size: 35,
+                            ),
+                          ),
+                        ),
                 ],
               ),
             ],

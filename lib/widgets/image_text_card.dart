@@ -4,8 +4,11 @@ class ImageTextCard extends StatelessWidget {
   final ImageProvider image;
   final String? text;
 
-  const ImageTextCard({Key? key, required this.image, this.text})
-      : super(key: key);
+  const ImageTextCard({
+    Key? key,
+    required this.image,
+    this.text,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
