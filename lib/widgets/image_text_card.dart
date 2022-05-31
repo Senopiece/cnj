@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 
 class ImageTextCard extends StatelessWidget {
+  final ImageProvider image;
   final String? text;
-  const ImageTextCard({Key? key, this.text}) : super(key: key);
+
+  const ImageTextCard({Key? key, required this.image, this.text})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,9 +23,7 @@ class ImageTextCard extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Image.network(
-                  "https://api.chucknorris.io/img/chucknorris_logo_coloured_small@2x.png",
-                ),
+                Image(image: image),
                 text == null
                     ? const CircularProgressIndicator()
                     : Text(

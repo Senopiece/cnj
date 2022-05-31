@@ -7,6 +7,8 @@ import '../image_text_card.dart';
 import 'dart:convert';
 
 final _jokeApiUrl = Uri.parse("https://api.chucknorris.io/jokes/random");
+const _logoUrl =
+    "https://api.chucknorris.io/img/chucknorris_logo_coloured_small@2x.png";
 
 Future<ChuckNorrisJoke> _fetchRandomJoke() async {
   ChuckNorrisJoke joke;
@@ -15,7 +17,7 @@ Future<ChuckNorrisJoke> _fetchRandomJoke() async {
     final response = await http.get(_jokeApiUrl);
     joke = ChuckNorrisJoke.fromJson(
         jsonDecode(response.body) as Map<String, Object?>);
-  } while (joke.value.length > 120);
+  } while (joke.value.length > 40);
 
   return joke;
 }
@@ -29,38 +31,34 @@ class ChuckNorrisJokePage extends StatefulWidget {
 
 class _ChuckNorrisJokesPageState extends State<ChuckNorrisJokePage> {
   late final SwipableStackController _controller;
-  bool likeSwapDirection = false;
   final Map<int, ChuckNorrisJoke?> _preparedCards = {};
-  Uri? _currentDisplayingCardSrc;
-
-  void _listenController() => setState(() {});
+  int? _topIndex;
+  bool _likeSwapDirection = false;
 
   void _like() {
     setState(() {
-      likeSwapDirection = !likeSwapDirection;
+      _likeSwapDirection = !_likeSwapDirection;
       _controller.next(
         swipeDirection:
-            likeSwapDirection ? SwipeDirection.right : SwipeDirection.left,
+            _likeSwapDirection ? SwipeDirection.right : SwipeDirection.left,
       );
     });
   }
 
   Future<void> _openInBrowser() async {
-    await launchUrl(_currentDisplayingCardSrc!);
+    await launchUrl(Uri.parse(_preparedCards[_topIndex]!.url));
   }
 
   @override
   void initState() {
     super.initState();
-    _controller = SwipableStackController()..addListener(_listenController);
+    _controller = SwipableStackController();
   }
 
   @override
   void dispose() {
     super.dispose();
-    _controller
-      ..removeListener(_listenController)
-      ..dispose();
+    _controller.dispose();
   }
 
   @override
@@ -79,10 +77,22 @@ class _ChuckNorrisJokesPageState extends State<ChuckNorrisJokePage> {
                   controller: _controller,
                   allowVerticalSwipe: false,
                   onSwipeCompleted: (index, direction) {
-                    setState(() {
-                      _preparedCards.remove(index);
-                      _currentDisplayingCardSrc = null;
-                    });
+                    _preparedCards.remove(index);
+                    Future.delayed(const Duration(milliseconds: 0)).then(
+                      (value) {
+                        setState(() {
+                          _topIndex = _controller.currentIndex;
+                        });
+                      },
+                    );
+                  },
+                  onWillMoveNext: (index, direction) {
+                    if (_preparedCards[index] != null) {
+                      setState(() {
+                        _topIndex = null;
+                      });
+                    }
+                    return _preparedCards[index] != null;
                   },
                   builder: (context, properties) {
                     if (!_preparedCards.containsKey(properties.index)) {
@@ -95,16 +105,12 @@ class _ChuckNorrisJokesPageState extends State<ChuckNorrisJokePage> {
                     }
 
                     if (properties.stackIndex == 0) {
-                      _currentDisplayingCardSrc =
-                          _preparedCards[properties.index] == null
-                              ? null
-                              : Uri.parse(
-                                  _preparedCards[properties.index]!.url);
                       return AnimatedOpacity(
                         opacity: 1,
                         duration: const Duration(milliseconds: 200),
                         child: Center(
                           child: ImageTextCard(
+                            image: const NetworkImage(_logoUrl),
                             text: _preparedCards[properties.index]?.value,
                           ),
                         ),
@@ -116,6 +122,7 @@ class _ChuckNorrisJokesPageState extends State<ChuckNorrisJokePage> {
                       duration: const Duration(milliseconds: 0),
                       child: Center(
                         child: ImageTextCard(
+                          image: const NetworkImage(_logoUrl),
                           text: _preparedCards[properties.index]?.value,
                         ),
                       ),
@@ -132,7 +139,7 @@ class _ChuckNorrisJokesPageState extends State<ChuckNorrisJokePage> {
                     icon: const Icon(Icons.open_in_browser_rounded),
                     iconSize: 33,
                     tooltip: "open in browser",
-                    onPressed: _currentDisplayingCardSrc != null
+                    onPressed: _preparedCards[_topIndex] != null
                         ? _openInBrowser
                         : null,
                   ),
@@ -140,7 +147,7 @@ class _ChuckNorrisJokesPageState extends State<ChuckNorrisJokePage> {
                     icon: const Icon(Icons.favorite_border_rounded),
                     iconSize: 33,
                     tooltip: "like",
-                    onPressed: _like,
+                    onPressed: _preparedCards[_topIndex] != null ? _like : null,
                   ),
                 ],
               ),
