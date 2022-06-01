@@ -36,7 +36,7 @@ class ChuckNorrisJokePage extends StatefulWidget {
 class _ChuckNorrisJokesPageState extends State<ChuckNorrisJokePage> {
   late final SwipableStackController _controller;
   final Map<int, ChuckNorrisJoke?> _preparedCards = {};
-  int? _topIndex;
+  int? _topIndex = 0;
   bool _liked = false;
   bool _likeSwapDirection = false;
 
@@ -86,7 +86,6 @@ class _ChuckNorrisJokesPageState extends State<ChuckNorrisJokePage> {
                     }
 
                     if (properties.stackIndex == 0) {
-                      _topIndex = properties.index; // reset from grey
                       return Center(
                         child: AnimatedOpacity(
                           opacity: 1,
