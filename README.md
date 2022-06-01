@@ -10,7 +10,7 @@ A simple app for entertainment purposes, I dunno what to say more.
 
 ## Latest build
 
-- [v1.0.0 (only Android APK)](https://github.com/Senopiece/cnj/releases/tag/v1.0.0)
+- [v1.0.1 (only Android APK)](https://github.com/Senopiece/cnj/releases/tag/v1.0.1)
 
 ## Todo's
 
