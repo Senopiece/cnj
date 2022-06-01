@@ -6,7 +6,7 @@ A simple app for entertainment purposes, I dunno what to say more.
 
 ## Showcase
 
-![](showcase.gif)
+<img src="showcase.gif" width="200"/>
 
 ## Build
 
