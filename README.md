@@ -12,6 +12,6 @@ A simple app for entertainment purposes, I dunno what to say more.
 
 - [v1.0.0 (only Android APK)](https://github.com/Senopiece/cnj/releases/tag/v1.0.0)
 
-## TODO's
+## Todo's
 
 - Refactor all that messy shit.
