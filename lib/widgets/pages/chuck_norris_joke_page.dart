@@ -62,7 +62,6 @@ class _ChuckNorrisJokesPageState extends State<ChuckNorrisJokePage> {
                       (value) {
                         setState(() {
                           _topIndex = _controller.currentIndex;
-                          _liked = false;
                         });
                       },
                     );
@@ -70,7 +69,8 @@ class _ChuckNorrisJokesPageState extends State<ChuckNorrisJokePage> {
                   onWillMoveNext: (index, direction) {
                     if (_preparedCards[index] != null) {
                       setState(() {
-                        _topIndex = null;
+                        _topIndex = null; // set to grey
+                        _liked = false; // reset like
                       });
                     }
                     return _preparedCards[index] != null;
@@ -81,12 +81,12 @@ class _ChuckNorrisJokesPageState extends State<ChuckNorrisJokePage> {
                       _fetchRandomJoke().then((joke) {
                         setState(() {
                           _preparedCards[properties.index] = joke;
-                          _topIndex = _controller.currentIndex;
                         });
                       });
                     }
 
                     if (properties.stackIndex == 0) {
+                      _topIndex = properties.index; // reset from grey
                       return Center(
                         child: AnimatedOpacity(
                           opacity: 1,
@@ -116,7 +116,9 @@ class _ChuckNorrisJokesPageState extends State<ChuckNorrisJokePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ScaleButton(
-                    onTap: _openInBrowser,
+                    onTap: _preparedCards[_topIndex] != null
+                        ? _openInBrowser
+                        : null,
                     child: Icon(
                       Icons.open_in_browser_rounded,
                       size: 35,
@@ -145,16 +147,18 @@ class _ChuckNorrisJokesPageState extends State<ChuckNorrisJokePage> {
                           duration: const Duration(milliseconds: 60),
                           child: ScaleButton(
                             onTap: () {
-                              setState(() {
-                                _liked = true;
-                                Future.delayed(
-                                        const Duration(milliseconds: 400))
-                                    .then(
-                                  (value) {
-                                    _like();
-                                  },
-                                );
-                              });
+                              if (_preparedCards[_topIndex] != null) {
+                                setState(() {
+                                  _liked = true;
+                                  Future.delayed(
+                                          const Duration(milliseconds: 400))
+                                      .then(
+                                    (value) {
+                                      _like();
+                                    },
+                                  );
+                                });
+                              }
                             },
                             child: Icon(
                               Icons.thumb_up_rounded,
