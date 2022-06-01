@@ -8,9 +8,9 @@ A simple app for entertainment purposes, I dunno what to say more.
 
 <img src="showcase.gif" width="200"/>
 
-## Build
+## Latest build
 
-TODO
+- [v1.0.0 (only Android APK)](https://github.com/Senopiece/cnj/releases/tag/v1.0.0)
 
 ## TODO's
 
