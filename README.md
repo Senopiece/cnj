@@ -1,7 +1,17 @@
 # Chuck Norris jokes
 
-A simple app for entertainment purposes.
+*Assignment 1 CPMDWithF course.*
 
-## Screenshots
+A simple app for entertainment purposes, I dunno what to say more.
+
+## Showcase
+
+![](showcase.gif)
+
+## Build
 
 TODO
+
+## TODO's
+
+- Refactor all that messy shit.
