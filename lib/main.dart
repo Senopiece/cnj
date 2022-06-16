@@ -1,8 +1,15 @@
+import 'package:cnj/pages/jokes.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' as flutter_services;
+import 'package:get/get.dart';
 
-import 'widgets/pages/chuck_norris_joke_page.dart';
+import 'services/binding.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  flutter_services.SystemChrome.setPreferredOrientations([
+    flutter_services.DeviceOrientation.portraitUp,
+  ]);
   runApp(const ChuckNorrisJokeApp());
 }
 
@@ -11,12 +18,13 @@ class ChuckNorrisJokeApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: "Chuck Norris jokes!",
-      theme: ThemeData(
-        highlightColor: Colors.lightBlueAccent,
-      ),
-      home: const ChuckNorrisJokePage(),
+    return GetMaterialApp(
+      title: 'Chuck Norris jokes!',
+      initialBinding: ServicesBinding(),
+      initialRoute: jokesPage.name,
+      getPages: [
+        jokesPage,
+      ],
     );
   }
 }
