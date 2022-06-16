@@ -6,10 +6,12 @@ import 'package:url_launcher/url_launcher.dart';
 // TODO: handle error on chuchnorris API future completes with a error
 // TODO: handle missing network error
 
+/// Group 0 - observes [topContent] and [liked] changes
+/// Group 1 - observes only [liked] changes
 class JokesPageController extends GetxController {
   late final SwipableStackController swiper;
-  bool liked = false;
   bool likeSwipeDirection = false;
+  bool liked = false;
   ChuckNorrisJoke? topContent;
 
   bool get canSwipe => topContent != null && !liked;
