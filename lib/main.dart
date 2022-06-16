@@ -1,4 +1,5 @@
 import 'package:cnj/pages/jokes.dart';
+import 'package:cnj/themes/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' as flutter_services;
 import 'package:get/get.dart';
@@ -20,6 +21,7 @@ class ChuckNorrisJokeApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: 'Chuck Norris jokes!',
+      theme: mainTheme,
       initialBinding: ServicesBinding(),
       initialRoute: jokesPage.name,
       getPages: [

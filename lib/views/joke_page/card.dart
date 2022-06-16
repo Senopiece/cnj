@@ -45,32 +45,36 @@ class _JokeCardState extends State<JokeCard> {
                   future: future,
                   builder: (context, AsyncSnapshot<ChuckNorrisJoke?> snapshot) {
                     if (snapshot.connectionState != ConnectionState.done) {
-                      return const CircularProgressIndicator();
+                      return CircularProgressIndicator(
+                        color: Theme.of(context).primaryColor,
+                      );
                     }
                     if (snapshot.hasError) {
-                      // TODO: report error to crashanalytics
-                      return Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Text(
-                            'oops! While fetching this joke some problem occurred, press this button to retry',
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context).textTheme.headline5,
-                          ),
-                          ScaleButton(
-                            onTap: () {
-                              // we need to simultaneously initiate a new future
-                              // and rebuild this view
-                              setState(() {
-                                fetchContent();
-                              });
-                            },
-                            child: const Icon(
-                              Icons.refresh,
-                              size: 50,
+                      return Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Text(
+                              'oops!\n While fetching this joke some problem has occurred',
+                              textAlign: TextAlign.center,
+                              style: Theme.of(context).textTheme.headline6,
                             ),
-                          ),
-                        ],
+                            ScaleButton(
+                              onTap: () {
+                                // we need to simultaneously initiate a new future
+                                // and rebuild this view
+                                setState(() {
+                                  fetchContent();
+                                });
+                              },
+                              child: Icon(
+                                Icons.refresh,
+                                size: 60,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                            ),
+                          ],
+                        ),
                       );
                     }
                     return Text(
@@ -101,7 +105,7 @@ class _JokeCardState extends State<JokeCard> {
     if (result != null) {
       if (widget.onFutureCompleted != null && !said) {
         Future(() async {
-          // schedule to say when the building is completed
+          // schedule to say only after the building is completed
           widget.onFutureCompleted!(result!);
         });
         said = true;
@@ -114,7 +118,10 @@ class _JokeCardState extends State<JokeCard> {
       result = await chucknorris.fetchRandomJoke();
       assert(said == false);
       if (widget.onFutureCompleted != null) {
-        widget.onFutureCompleted!(result!);
+        Future(() async {
+          // schedule into another future to isolate if it fails
+          widget.onFutureCompleted!(result!);
+        });
         said = true;
       }
       return result!;
