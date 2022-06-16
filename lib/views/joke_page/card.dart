@@ -24,45 +24,6 @@ class _JokeCardState extends State<JokeCard> {
   ChuckNorrisJoke? result;
   bool said = false;
 
-  void fetchContent() {
-    future = Future(() async {
-      result = await chucknorris.fetchRandomJoke();
-      assert(said == false);
-      if (widget.onFutureCompleted != null) {
-        widget.onFutureCompleted!(result!);
-        said = true;
-      }
-      return result!;
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    fetchContent();
-  }
-
-  @override
-  void didUpdateWidget(JokeCard oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    // so no matter how many widgets you update,
-    // only one callback would be invoked
-    // Note that here are two types of how it can be invoked:
-    // - only the most first callback would be invoked if it was setup after
-    //   the future completes, all the others would be ignored
-    // - only the latest callback would be invoked if it was setup before
-    //   the future completes, all the others would be ignored
-    if (result != null) {
-      if (widget.onFutureCompleted != null && !said) {
-        Future(() async {
-          // schedule to say when the building is completed
-          widget.onFutureCompleted!(result!);
-        });
-        said = true;
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -125,5 +86,44 @@ class _JokeCardState extends State<JokeCard> {
         ),
       ),
     );
+  }
+
+  @override
+  void didUpdateWidget(JokeCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // so no matter how many widgets you update,
+    // only one callback would be invoked
+    // Note that here are two types of how it can be invoked:
+    // - only the most first callback would be invoked if it was setup after
+    //   the future completes, all the others would be ignored
+    // - only the latest callback would be invoked if it was setup before
+    //   the future completes, all the others would be ignored
+    if (result != null) {
+      if (widget.onFutureCompleted != null && !said) {
+        Future(() async {
+          // schedule to say when the building is completed
+          widget.onFutureCompleted!(result!);
+        });
+        said = true;
+      }
+    }
+  }
+
+  void fetchContent() {
+    future = Future(() async {
+      result = await chucknorris.fetchRandomJoke();
+      assert(said == false);
+      if (widget.onFutureCompleted != null) {
+        widget.onFutureCompleted!(result!);
+        said = true;
+      }
+      return result!;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchContent();
   }
 }
