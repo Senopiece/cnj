@@ -8,19 +8,15 @@ class JokesPageRoot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Container(
-          alignment: Alignment.center,
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: const [
-              JokesPageBody(),
-              JokesPageFooter(),
-            ],
-          ),
-        ),
+    return Container(
+      alignment: Alignment.center,
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: const [
+          JokesPageBody(),
+          JokesPageFooter(),
+        ],
       ),
     );
   }

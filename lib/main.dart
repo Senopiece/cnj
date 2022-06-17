@@ -8,8 +8,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' as flutter_services;
 import 'package:get/get.dart';
 
+import 'controllers/root_controller.dart';
 import 'firebase_options.dart';
 import 'services/binding.dart';
+import 'views/root.dart';
 
 Future<void> main() async {
   await runZonedGuarded(() async {
@@ -35,11 +37,19 @@ class ChuckNorrisJokeApp extends StatelessWidget {
     return GetMaterialApp(
       title: 'Chuck Norris jokes!',
       theme: mainTheme,
-      initialBinding: ServicesBinding(),
+      initialBinding: BindingsBuilder(
+        () {
+          ServicesBinding().dependencies();
+          Get.put(RootController());
+        },
+      ),
       initialRoute: jokesPage.name,
       getPages: [
         jokesPage,
       ],
+      builder: (context, content) {
+        return ApplicationRoot(child: content);
+      },
     );
   }
 }
