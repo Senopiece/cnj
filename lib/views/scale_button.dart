@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+// TODO: separate package
+
 class ScaleButton extends StatefulWidget {
   final Duration duration;
   final VoidCallback? onTap;
