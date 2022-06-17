@@ -17,7 +17,7 @@ class ChuckNorrisAPI extends GetConnect implements GetxService {
       }
 
       joke = response.body!;
-    } while (joke.value.length > 120);
+    } while (joke.value.length > 240);
 
     return joke;
   }

@@ -6,6 +6,7 @@ part 'chuck_norris_joke.g.dart';
 @freezed
 class ChuckNorrisJoke with _$ChuckNorrisJoke {
   const factory ChuckNorrisJoke({
+    required List<String> categories,
     @JsonKey(name: 'icon_url') required String iconUrl,
     required String id,
     required String url,

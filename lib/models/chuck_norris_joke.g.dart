@@ -8,6 +8,9 @@ part of 'chuck_norris_joke.dart';
 
 _$_ChuckNorrisJoke _$$_ChuckNorrisJokeFromJson(Map<String, dynamic> json) =>
     _$_ChuckNorrisJoke(
+      categories: (json['categories'] as List<dynamic>)
+          .map((e) => e as String)
+          .toList(),
       iconUrl: json['icon_url'] as String,
       id: json['id'] as String,
       url: json['url'] as String,
@@ -16,6 +19,7 @@ _$_ChuckNorrisJoke _$$_ChuckNorrisJokeFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$$_ChuckNorrisJokeToJson(_$_ChuckNorrisJoke instance) =>
     <String, dynamic>{
+      'categories': instance.categories,
       'icon_url': instance.iconUrl,
       'id': instance.id,
       'url': instance.url,

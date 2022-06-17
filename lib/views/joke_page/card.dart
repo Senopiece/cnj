@@ -26,6 +26,7 @@ class _JokeCardState extends State<JokeCard> {
 
   @override
   Widget build(BuildContext context) {
+    // TODO: when it comes first place, try to refresh content
     return Card(
       elevation: 10.0,
       shape: const RoundedRectangleBorder(
@@ -37,54 +38,75 @@ class _JokeCardState extends State<JokeCard> {
         child: Center(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                const Image(image: AssetImage('images/card_logo.png')),
-                FutureBuilder(
-                  future: future,
-                  builder: (context, AsyncSnapshot<ChuckNorrisJoke?> snapshot) {
-                    if (snapshot.connectionState != ConnectionState.done) {
-                      return CircularProgressIndicator(
-                        color: Theme.of(context).primaryColor,
-                      );
-                    }
-                    if (snapshot.hasError) {
-                      return Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Text(
-                              'oops!\n While fetching this joke some problem has occurred',
-                              textAlign: TextAlign.center,
-                              style: Theme.of(context).textTheme.headline6,
-                            ),
-                            ScaleButton(
-                              onTap: () {
-                                // we need to simultaneously initiate a new future
-                                // and rebuild this view
-                                setState(() {
-                                  fetchContent();
-                                });
-                              },
-                              child: Icon(
-                                Icons.refresh,
-                                size: 60,
-                                color: Theme.of(context).primaryColor,
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    }
-                    return Text(
-                      snapshot.data!.value,
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.headline5,
+            child: Expanded(
+              child: FutureBuilder(
+                future: future,
+                builder: (context, AsyncSnapshot<ChuckNorrisJoke?> snapshot) {
+                  if (snapshot.connectionState != ConnectionState.done) {
+                    return CircularProgressIndicator(
+                      color: Theme.of(context).primaryColor,
                     );
-                  },
-                ),
-              ],
+                  }
+                  if (snapshot.hasError) {
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text(
+                          'oops!\n While fetching this joke some problem has occurred',
+                          textAlign: TextAlign.center,
+                          style:
+                              Theme.of(context).textTheme.headline5?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                        ),
+                        ScaleButton(
+                          onTap: () {
+                            // we need to simultaneously initiate a new future
+                            // and rebuild this view
+                            setState(() {
+                              fetchContent();
+                            });
+                          },
+                          child: Icon(
+                            Icons.refresh,
+                            size: 60,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
+                      ],
+                    );
+                  }
+
+                  ChuckNorrisJoke joke = snapshot.data!;
+                  String categories = joke.categories.isEmpty
+                      ? 'no categories'
+                      : joke.categories.join(', ');
+
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      const SizedBox(height: 18),
+                      Text(
+                        '[ $categories ]',
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.headline5?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                      ),
+                      const SizedBox(height: 18),
+                      Expanded(
+                        child: Center(
+                          child: Text(
+                            joke.value,
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.headline5,
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
             ),
           ),
         ),
