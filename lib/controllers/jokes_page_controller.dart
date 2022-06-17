@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:swipable_stack/swipable_stack.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-// TODO: crashanalytics
 // TODO: handle error on chuchnorris API future completes with a error
 // TODO: handle missing network error
 
