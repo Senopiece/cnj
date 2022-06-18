@@ -1,7 +1,6 @@
 import 'dart:async';
 
-import 'package:cnj/pages/jokes.dart';
-import 'package:cnj/themes/main.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +9,11 @@ import 'package:get/get.dart';
 
 import 'controllers/root_controller.dart';
 import 'firebase_options.dart';
-import 'services/binding.dart';
+import 'pages/main.dart';
+import 'services/chucknorris.dart';
+import 'services/network_info.dart';
+import 'services/random_jokes_source.dart';
+import 'themes/main.dart';
 import 'views/root.dart';
 
 Future<void> main() async {
@@ -39,13 +42,15 @@ class ChuckNorrisJokeApp extends StatelessWidget {
       theme: mainTheme,
       initialBinding: BindingsBuilder(
         () {
-          ServicesBinding().dependencies();
+          Get.put(ChuckNorrisAPI());
+          Get.put(RandomJokesSource());
+          Get.put(NetworkInfo(Connectivity()));
           Get.put(RootController());
         },
       ),
-      initialRoute: jokesPage.name,
+      initialRoute: mainPage.name,
       getPages: [
-        jokesPage,
+        mainPage,
       ],
       builder: (context, content) {
         return ApplicationRoot(child: content);

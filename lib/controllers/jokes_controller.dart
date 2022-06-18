@@ -5,7 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 /// Group 0 - observes [topContent] and [liked] changes
 /// Group 1 - observes only [liked] changes
-class JokesPageController extends GetxController {
+class JokesController extends GetxController {
   late final SwipableStackController swiper;
   bool likeSwipeDirection = false;
   bool liked = false;

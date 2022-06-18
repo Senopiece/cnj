@@ -1,16 +1,16 @@
 import 'dart:math';
 
-import 'package:cnj/controllers/jokes_page_controller.dart';
+import 'package:cnj/controllers/jokes_controller.dart';
 import 'package:cnj/views/scale_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class JokesPageFooter extends GetView<JokesPageController> {
-  const JokesPageFooter({Key? key}) : super(key: key);
+class JokesFooter extends GetView<JokesController> {
+  const JokesFooter({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<JokesPageController>(
+    return GetBuilder<JokesController>(
       id: 0, // depends on [topContent] change
       builder: (controller) => Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -24,7 +24,7 @@ class JokesPageFooter extends GetView<JokesPageController> {
             ),
           ),
           const SizedBox(width: 50),
-          GetBuilder<JokesPageController>(
+          GetBuilder<JokesController>(
             id: 1, // depends on [liked] and [topContent with id:0] change
             builder: (controller) {
               double turns = 0;

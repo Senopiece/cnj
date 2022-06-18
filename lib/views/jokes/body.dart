@@ -1,4 +1,5 @@
-import 'package:cnj/controllers/jokes_page_controller.dart';
+import 'package:cnj/controllers/jokes_controller.dart';
+import 'package:cnj/datatypes/jokes_source.dart';
 import 'package:cnj/models/chuck_norris_joke.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -6,8 +7,8 @@ import 'package:swipable_stack/swipable_stack.dart';
 
 import 'card.dart';
 
-class JokesPageBody extends GetView<JokesPageController> {
-  const JokesPageBody({Key? key}) : super(key: key);
+class JokesBody<Source extends JokesSource> extends GetView<JokesController> {
+  const JokesBody({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +41,7 @@ class JokesPageBody extends GetView<JokesPageController> {
             child: AnimatedOpacity(
               opacity: opacity,
               duration: duration,
-              child: JokeCard(
+              child: JokeCard<Source>(
                 onFutureCompleted: onContentUpdated,
               ),
             ),

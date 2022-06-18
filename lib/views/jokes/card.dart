@@ -1,12 +1,14 @@
 import 'dart:async';
 
+import 'package:cnj/datatypes/jokes_source.dart';
 import 'package:cnj/models/chuck_norris_joke.dart';
-import 'package:cnj/services/chucknorris.dart';
 import 'package:cnj/views/scale_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class JokeCard extends StatefulWidget {
+/// Note that this is the only class that uses vanilla
+/// state management as it is most suitable this case
+class JokeCard<Source extends JokesSource> extends StatefulWidget {
   final void Function(ChuckNorrisJoke)? onFutureCompleted;
 
   const JokeCard({
@@ -15,11 +17,11 @@ class JokeCard extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<JokeCard> createState() => _JokeCardState();
+  State<JokeCard> createState() => _JokeCardState<Source>();
 }
 
-class _JokeCardState extends State<JokeCard> {
-  final chucknorris = Get.find<ChuckNorrisAPI>();
+class _JokeCardState<Source extends JokesSource> extends State<JokeCard> {
+  final source = Get.find<Source>();
   late Future<ChuckNorrisJoke> future;
   ChuckNorrisJoke? result;
   bool said = false;
@@ -137,7 +139,7 @@ class _JokeCardState extends State<JokeCard> {
 
   void fetchContent() {
     future = Future(() async {
-      result = await chucknorris.fetchRandomJoke();
+      result = await source.getNextJoke();
       assert(said == false);
       if (widget.onFutureCompleted != null) {
         Future(() async {
