@@ -7,6 +7,7 @@ class ChuckNorrisAPI extends GetConnect implements GetxService {
   Future<List<String>> get categoriesList async {
     final response = await get<List<String>>(
       '$_apiUrl/jokes/categories',
+      decoder: (obj) => List<String>.from(obj),
     );
 
     if (response.hasError) {

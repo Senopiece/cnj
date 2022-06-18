@@ -3,7 +3,10 @@ import 'package:get/get.dart';
 
 class MainPageController extends GetxController {
   void openCategories() {
-    Get.dialog(const CategoriesList());
+    Get.defaultDialog(
+      title: "",
+      content: const CategoriesList(),
+    );
   }
 
   void gotoFavorites() {}

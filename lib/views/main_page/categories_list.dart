@@ -9,22 +9,60 @@ class CategoriesList extends GetView<CategoriesListController> {
   @override
   Widget build(BuildContext context) {
     Get.put(CategoriesListController());
-    //ListView.separated();
-    return Stack(
-      children: [
-        Container(
-          color: Colors.black54,
-        ),
-        exitButton,
-      ],
+    return Container(
+      height: 400,
+      width: 300,
+      alignment: Alignment.center,
+      child: GetBuilder<CategoriesListController>(
+        builder: (context) {
+          return FutureBuilder(
+            future: controller.futureCategories,
+            builder: (context, AsyncSnapshot<List<String>> snapshot) {
+              if (snapshot.connectionState != ConnectionState.done) {
+                return const CircularProgressIndicator();
+              }
+
+              if (snapshot.hasError) {
+                // TODO: test
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text(
+                      'oops!\n While fetching the categories list some problem has occurred',
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.headline5?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                    ),
+                    ScaleButton(
+                      onTap: controller.refreshFutureCategories,
+                      child: Icon(
+                        Icons.refresh,
+                        size: 60,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    ),
+                  ],
+                );
+              }
+
+              return ListView.separated(
+                shrinkWrap: true,
+                itemCount: snapshot.data!.length,
+                separatorBuilder: (context, i) => const Divider(),
+                itemBuilder: (context, i) {
+                  String category = snapshot.data![i];
+                  return CheckboxListTile(
+                    title: Text(category),
+                    value: controller.selectedCategories.contains(category),
+                    onChanged: (_) => controller.toggle(category),
+                  );
+                },
+              );
+            },
+          );
+        },
+      ),
     );
   }
-
-  Widget get exitButton => ScaleButton(
-        onTap: controller.close,
-        child: const Icon(
-          Icons.close,
-          size: 50,
-        ),
-      );
 }

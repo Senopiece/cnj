@@ -9,11 +9,11 @@ class RandomJokesSource extends GetxService implements JokesSource {
   final _api = Get.find<ChuckNorrisAPI>();
 
   final _updateStreamCtrl = StreamController<void>.broadcast();
-  var _categories = <String>[];
+  var _categories = <String>{};
 
-  List<String> get categories => _categories;
+  Set<String> get categories => _categories;
 
-  set categories(List<String> newCategories) {
+  set categories(Set<String> newCategories) {
     _categories = newCategories;
     _updateStreamCtrl.add(null);
   }
@@ -23,7 +23,7 @@ class RandomJokesSource extends GetxService implements JokesSource {
 
   @override
   Future<ChuckNorrisJoke> getNextJoke() {
-    return _api.fetchRandomJoke(categories: _categories);
+    return _api.fetchRandomJoke(categories: _categories.toList());
   }
 
   @override

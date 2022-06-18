@@ -1,4 +1,3 @@
-import 'package:cnj/controllers/categories_list_controller.dart';
 import 'package:cnj/controllers/jokes_controller.dart';
 import 'package:cnj/controllers/main_page_controller.dart';
 import 'package:cnj/views/main_page.dart';
