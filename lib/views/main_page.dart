@@ -14,56 +14,56 @@ class MainPage extends GetView<MainPageController> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16).copyWith(top: 8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              ScaleButton(
-                onTap: controller.openCategories,
-                child: Row(
-                  children: [
-                    Text(
-                      'categories',
-                      textAlign: TextAlign.left,
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline5
-                          ?.copyWith(fontSize: 25),
-                    ),
-                    const Icon(
-                      Icons.keyboard_arrow_down_rounded,
-                      size: 33,
-                    ),
-                  ],
-                ),
-              ),
-              ScaleButton(
-                onTap: controller.gotoFavorites,
-                child: Row(
-                  children: [
-                    Text(
-                      'favorites',
-                      textAlign: TextAlign.right,
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline5
-                          ?.copyWith(fontSize: 25),
-                    ),
-                    const Icon(
-                      Icons.keyboard_arrow_right_rounded,
-                      size: 33,
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
+        topBar,
         const Expanded(
           child: Jokes<RandomJokesSource>(),
         ),
       ],
     );
   }
+
+  Widget get topBar => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16).copyWith(top: 8),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            categoriesButton,
+            favoritesButton,
+          ],
+        ),
+      );
+
+  Widget get categoriesButton => ScaleButton(
+        onTap: controller.openCategories,
+        child: Row(
+          children: [
+            Text(
+              'categories',
+              textAlign: TextAlign.left,
+              style: Get.theme.textTheme.headline5?.copyWith(fontSize: 25),
+            ),
+            const Icon(
+              Icons.keyboard_arrow_down_rounded,
+              size: 33,
+            ),
+          ],
+        ),
+      );
+
+  Widget get favoritesButton => ScaleButton(
+        onTap: controller.gotoFavorites,
+        child: Row(
+          children: [
+            Text(
+              'favorites',
+              textAlign: TextAlign.right,
+              style: Get.theme.textTheme.headline5?.copyWith(fontSize: 25),
+            ),
+            const Icon(
+              Icons.keyboard_arrow_right_rounded,
+              size: 33,
+            ),
+          ],
+        ),
+      );
 }
