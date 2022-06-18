@@ -1,8 +1,10 @@
+import 'dart:async';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:get/get.dart';
 
-class NetworkInfo {
-  Connectivity connectivity;
-
+class NetworkInfo extends GetxService {
+  final Connectivity connectivity;
   NetworkInfo(this.connectivity);
 
   // to check type of internet connectivity
@@ -19,9 +21,6 @@ class NetworkInfo {
   /// else it will return [false]
   Future<bool> isConnected() async {
     final result = await connectivity.checkConnectivity();
-    if (result != ConnectivityResult.none) {
-      return true;
-    }
-    return false;
+    return result != ConnectivityResult.none;
   }
 }

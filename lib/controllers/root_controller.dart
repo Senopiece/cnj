@@ -8,32 +8,33 @@ import 'package:get/get.dart';
 /// Important: do not use Get.dialog/Get.defaultDialog/etc outside this file
 class RootController extends GetxController {
   final networkInfo = Get.find<NetworkInfo>();
-  late final StreamSubscription<ConnectivityResult> subscription;
+  late final StreamSubscription<ConnectivityResult> networkSubscription;
+
+  void _handleConnectionChange(ConnectivityResult event) {
+    bool isDialogOpen = Get.isDialogOpen ?? false;
+    if (event == ConnectivityResult.none) {
+      assert(!isDialogOpen);
+      Get.defaultDialog(
+        // fully blocking popup
+        middleText: 'No connection',
+        onWillPop: () async => false,
+      );
+    } else if (isDialogOpen) {
+      Get.back();
+    }
+  }
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
-    // TODO: test it on the real device
-    // TODO: check does it work on start
-    subscription = networkInfo.onConnectivityChanged.listen(
-      (event) {
-        bool isDialogOpen = Get.isDialogOpen ?? false;
-        if (event == ConnectivityResult.none) {
-          assert(!isDialogOpen);
-          Get.defaultDialog(
-            middleText: 'Connection lost',
-            onWillPop: () async => false,
-          );
-        } else if (isDialogOpen) {
-          Get.back();
-        }
-      },
-    );
+    _handleConnectionChange(await networkInfo.connectivityResult);
+    networkSubscription =
+        networkInfo.onConnectivityChanged.listen(_handleConnectionChange);
   }
 
   @override
   void dispose() {
-    subscription.cancel();
+    networkSubscription.cancel();
     super.dispose();
   }
 }
