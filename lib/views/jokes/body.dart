@@ -42,6 +42,7 @@ class JokesBody<Source extends JokesSource> extends GetView<JokesController> {
               opacity: opacity,
               duration: duration,
               child: JokeCard<Source>(
+                autoRetry: properties.stackIndex != 0,
                 onFutureCompleted: onContentUpdated,
               ),
             ),

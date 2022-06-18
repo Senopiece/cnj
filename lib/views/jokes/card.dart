@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:async/async.dart';
 import 'package:cnj/datatypes/jokes_source.dart';
 import 'package:cnj/models/chuck_norris_joke.dart';
 import 'package:cnj/views/scale_button.dart';
@@ -10,9 +11,11 @@ import 'package:get/get.dart';
 /// state management as it is most suitable this case
 class JokeCard<Source extends JokesSource> extends StatefulWidget {
   final void Function(ChuckNorrisJoke)? onFutureCompleted;
+  final bool autoRetry;
 
   const JokeCard({
     Key? key,
+    this.autoRetry = true,
     this.onFutureCompleted,
   }) : super(key: key);
 
@@ -22,13 +25,14 @@ class JokeCard<Source extends JokesSource> extends StatefulWidget {
 
 class _JokeCardState<Source extends JokesSource> extends State<JokeCard> {
   final source = Get.find<Source>();
-  late Future<ChuckNorrisJoke> future;
+  late final StreamSubscription<void> _updates;
+
+  CancelableOperation<ChuckNorrisJoke>? future;
   ChuckNorrisJoke? result;
   bool said = false;
 
   @override
   Widget build(BuildContext context) {
-    // TODO: when it comes first place, try to refresh content
     return Card(
       elevation: 10.0,
       shape: const RoundedRectangleBorder(
@@ -42,12 +46,11 @@ class _JokeCardState<Source extends JokesSource> extends State<JokeCard> {
             padding: const EdgeInsets.all(16.0),
             child: Expanded(
               child: FutureBuilder(
-                future: future,
+                future: future!
+                    .value, // it is important to do set state after each fetchContent(), because we need to update this future
                 builder: (context, AsyncSnapshot<ChuckNorrisJoke?> snapshot) {
                   if (snapshot.connectionState != ConnectionState.done) {
-                    return CircularProgressIndicator(
-                      color: Theme.of(context).primaryColor,
-                    );
+                    return const CircularProgressIndicator();
                   }
                   if (snapshot.hasError) {
                     return Column(
@@ -137,24 +140,54 @@ class _JokeCardState<Source extends JokesSource> extends State<JokeCard> {
     }
   }
 
+  /// Important: do not forget to whap it with setState if you call it
+  /// not from initState didChangeDependencies or build methods
   void fetchContent() {
-    future = Future(() async {
-      result = await source.getNextJoke();
-      assert(said == false);
-      if (widget.onFutureCompleted != null) {
-        Future(() async {
-          // schedule into another future to isolate if it fails
-          widget.onFutureCompleted!(result!);
-        });
-        said = true;
-      }
-      return result!;
-    });
+    future?.cancel();
+    result = null;
+    said = false;
+    future = CancelableOperation.fromFuture(
+      Future(() async {
+        while (true) {
+          try {
+            result = await source.getNextJoke();
+            assert(said == false);
+            if (widget.onFutureCompleted != null) {
+              Future(() async {
+                // schedule into another future to isolate if it fails
+                widget.onFutureCompleted!(result!);
+              });
+              said = true;
+            }
+            return result!;
+          } catch (e) {
+            if (!widget.autoRetry) {
+              rethrow;
+            }
+            assert(result == null);
+          }
+        }
+      }),
+    );
   }
 
   @override
   void initState() {
     super.initState();
     fetchContent();
+
+    _updates = source.updateStream.listen((event) {
+      // set state to update to the new future in the FutureBuilder
+      setState(() {
+        fetchContent();
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    future?.cancel();
+    _updates.cancel();
+    super.dispose();
   }
 }
