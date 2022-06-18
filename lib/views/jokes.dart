@@ -10,8 +10,7 @@ class Jokes<Source extends JokesSource> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      alignment: Alignment.center,
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [

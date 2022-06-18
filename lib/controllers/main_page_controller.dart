@@ -3,4 +3,8 @@ import 'package:get/get.dart';
 
 class MainPageController extends GetxController {
   final jokesSource = Get.find<RandomJokesSource>();
+
+  void openCategories() {}
+
+  void gotoFavorites() {}
 }
