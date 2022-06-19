@@ -1,6 +1,6 @@
 # Chuck Norris jokes
 
-*Assignment 1 CPMDWithF course.*
+*Assignment 1/2 CPMDWithF course.*
 
 A simple app for entertainment purposes, I dunno what to say more.
 
@@ -11,7 +11,3 @@ A simple app for entertainment purposes, I dunno what to say more.
 ## Latest build
 
 - [v1.0.1 (only Android APK)](https://github.com/Senopiece/cnj/releases/tag/v1.0.1)
-
-## Todo's
-
-- Refactor all that messy shit.

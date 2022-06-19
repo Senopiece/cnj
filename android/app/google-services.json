@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "225796850694",
+    "project_id": "cnjc-2b9c0",
+    "storage_bucket": "cnjc-2b9c0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:225796850694:android:b4a6e1440cf7f4c0072f87",
+        "android_client_info": {
+          "package_name": "com.example.cnj"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "225796850694-p6aq97ek1snhgsfv3g2pt3lpttmemumi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAcSRmtEyd5R_fh-5Jmxy1fyrhpPozBWxs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "225796850694-p6aq97ek1snhgsfv3g2pt3lpttmemumi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

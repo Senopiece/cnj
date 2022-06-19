@@ -20,6 +20,7 @@ ChuckNorrisJoke _$ChuckNorrisJokeFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$ChuckNorrisJoke {
+  List<String> get categories => throw _privateConstructorUsedError;
   @JsonKey(name: 'icon_url')
   String get iconUrl => throw _privateConstructorUsedError;
   String get id => throw _privateConstructorUsedError;
@@ -38,7 +39,8 @@ abstract class $ChuckNorrisJokeCopyWith<$Res> {
           ChuckNorrisJoke value, $Res Function(ChuckNorrisJoke) then) =
       _$ChuckNorrisJokeCopyWithImpl<$Res>;
   $Res call(
-      {@JsonKey(name: 'icon_url') String iconUrl,
+      {List<String> categories,
+      @JsonKey(name: 'icon_url') String iconUrl,
       String id,
       String url,
       String value});
@@ -55,12 +57,17 @@ class _$ChuckNorrisJokeCopyWithImpl<$Res>
 
   @override
   $Res call({
+    Object? categories = freezed,
     Object? iconUrl = freezed,
     Object? id = freezed,
     Object? url = freezed,
     Object? value = freezed,
   }) {
     return _then(_value.copyWith(
+      categories: categories == freezed
+          ? _value.categories
+          : categories // ignore: cast_nullable_to_non_nullable
+              as List<String>,
       iconUrl: iconUrl == freezed
           ? _value.iconUrl
           : iconUrl // ignore: cast_nullable_to_non_nullable
@@ -89,7 +96,8 @@ abstract class _$$_ChuckNorrisJokeCopyWith<$Res>
       __$$_ChuckNorrisJokeCopyWithImpl<$Res>;
   @override
   $Res call(
-      {@JsonKey(name: 'icon_url') String iconUrl,
+      {List<String> categories,
+      @JsonKey(name: 'icon_url') String iconUrl,
       String id,
       String url,
       String value});
@@ -108,12 +116,17 @@ class __$$_ChuckNorrisJokeCopyWithImpl<$Res>
 
   @override
   $Res call({
+    Object? categories = freezed,
     Object? iconUrl = freezed,
     Object? id = freezed,
     Object? url = freezed,
     Object? value = freezed,
   }) {
     return _then(_$_ChuckNorrisJoke(
+      categories: categories == freezed
+          ? _value._categories
+          : categories // ignore: cast_nullable_to_non_nullable
+              as List<String>,
       iconUrl: iconUrl == freezed
           ? _value.iconUrl
           : iconUrl // ignore: cast_nullable_to_non_nullable
@@ -138,13 +151,22 @@ class __$$_ChuckNorrisJokeCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_ChuckNorrisJoke implements _ChuckNorrisJoke {
   const _$_ChuckNorrisJoke(
-      {@JsonKey(name: 'icon_url') required this.iconUrl,
+      {required final List<String> categories,
+      @JsonKey(name: 'icon_url') required this.iconUrl,
       required this.id,
       required this.url,
-      required this.value});
+      required this.value})
+      : _categories = categories;
 
   factory _$_ChuckNorrisJoke.fromJson(Map<String, dynamic> json) =>
       _$$_ChuckNorrisJokeFromJson(json);
+
+  final List<String> _categories;
+  @override
+  List<String> get categories {
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_categories);
+  }
 
   @override
   @JsonKey(name: 'icon_url')
@@ -158,7 +180,7 @@ class _$_ChuckNorrisJoke implements _ChuckNorrisJoke {
 
   @override
   String toString() {
-    return 'ChuckNorrisJoke(iconUrl: $iconUrl, id: $id, url: $url, value: $value)';
+    return 'ChuckNorrisJoke(categories: $categories, iconUrl: $iconUrl, id: $id, url: $url, value: $value)';
   }
 
   @override
@@ -166,6 +188,8 @@ class _$_ChuckNorrisJoke implements _ChuckNorrisJoke {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_ChuckNorrisJoke &&
+            const DeepCollectionEquality()
+                .equals(other._categories, _categories) &&
             const DeepCollectionEquality().equals(other.iconUrl, iconUrl) &&
             const DeepCollectionEquality().equals(other.id, id) &&
             const DeepCollectionEquality().equals(other.url, url) &&
@@ -176,6 +200,7 @@ class _$_ChuckNorrisJoke implements _ChuckNorrisJoke {
   @override
   int get hashCode => Object.hash(
       runtimeType,
+      const DeepCollectionEquality().hash(_categories),
       const DeepCollectionEquality().hash(iconUrl),
       const DeepCollectionEquality().hash(id),
       const DeepCollectionEquality().hash(url),
@@ -194,7 +219,8 @@ class _$_ChuckNorrisJoke implements _ChuckNorrisJoke {
 
 abstract class _ChuckNorrisJoke implements ChuckNorrisJoke {
   const factory _ChuckNorrisJoke(
-      {@JsonKey(name: 'icon_url') required final String iconUrl,
+      {required final List<String> categories,
+      @JsonKey(name: 'icon_url') required final String iconUrl,
       required final String id,
       required final String url,
       required final String value}) = _$_ChuckNorrisJoke;
@@ -202,6 +228,8 @@ abstract class _ChuckNorrisJoke implements ChuckNorrisJoke {
   factory _ChuckNorrisJoke.fromJson(Map<String, dynamic> json) =
       _$_ChuckNorrisJoke.fromJson;
 
+  @override
+  List<String> get categories => throw _privateConstructorUsedError;
   @override
   @JsonKey(name: 'icon_url')
   String get iconUrl => throw _privateConstructorUsedError;
