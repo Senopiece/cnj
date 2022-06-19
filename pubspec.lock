@@ -478,6 +478,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.0"
+  scale_button:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: "1065d016ae1042b8a8e91890c55a35954ac2d904"
+      resolved-ref: "1065d016ae1042b8a8e91890c55a35954ac2d904"
+      url: "https://github.com/Senopiece/scale_button.git"
+    source: git
+    version: "2.1.2"
   shelf:
     dependency: transitive
     description:

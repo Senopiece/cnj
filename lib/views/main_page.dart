@@ -1,8 +1,8 @@
 import 'package:cnj/controllers/main_page_controller.dart';
 import 'package:cnj/services/random_jokes_source.dart';
-import 'package:cnj/views/scale_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:scale_button/scale_button.dart';
 
 import 'jokes.dart';
 

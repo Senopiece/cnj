@@ -23,6 +23,11 @@ dependencies:
   firebase_core: ^1.18.0
   async: ^2.8.2
 
+  scale_button:
+    git:
+      url: https://github.com/Senopiece/scale_button.git
+      ref: 1065d016ae1042b8a8e91890c55a35954ac2d904
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

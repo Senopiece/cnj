@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:async/async.dart';
 import 'package:cnj/datatypes/jokes_source.dart';
 import 'package:cnj/models/chuck_norris_joke.dart';
-import 'package:cnj/views/scale_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:scale_button/scale_button.dart';
 
 /// Note that this is the only class that uses vanilla
 /// state management as it is most suitable this case
@@ -44,74 +44,71 @@ class _JokeCardState<Source extends JokesSource> extends State<JokeCard> {
         child: Center(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Expanded(
-              child: FutureBuilder(
-                future: future!
-                    .value, // it is important to do set state after each fetchContent(), because we need to update this future
-                builder: (context, AsyncSnapshot<ChuckNorrisJoke?> snapshot) {
-                  if (snapshot.connectionState != ConnectionState.done) {
-                    return const CircularProgressIndicator();
-                  }
-                  if (snapshot.hasError) {
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Text(
-                          'oops!\n While fetching this joke some problem has occurred',
-                          textAlign: TextAlign.center,
-                          style:
-                              Theme.of(context).textTheme.headline5?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                        ),
-                        ScaleButton(
-                          onTap: () {
-                            // we need to simultaneously initiate a new future
-                            // and rebuild this view
-                            setState(() {
-                              fetchContent();
-                            });
-                          },
-                          child: Icon(
-                            Icons.refresh,
-                            size: 60,
-                            color: Theme.of(context).primaryColor,
-                          ),
-                        ),
-                      ],
-                    );
-                  }
-
-                  ChuckNorrisJoke joke = snapshot.data!;
-                  String categories = joke.categories.isEmpty
-                      ? 'no categories'
-                      : joke.categories.join(', ');
-
+            child: FutureBuilder(
+              future: future!
+                  .value, // it is important to do set state after each fetchContent(), because we need to update this future
+              builder: (context, AsyncSnapshot<ChuckNorrisJoke?> snapshot) {
+                if (snapshot.connectionState != ConnectionState.done) {
+                  return const CircularProgressIndicator();
+                }
+                if (snapshot.hasError) {
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      const SizedBox(height: 18),
                       Text(
-                        '[ $categories ]',
+                        'oops!\n While fetching this joke some problem has occurred',
                         textAlign: TextAlign.center,
                         style: Theme.of(context).textTheme.headline5?.copyWith(
                               fontWeight: FontWeight.bold,
                             ),
                       ),
-                      const SizedBox(height: 18),
-                      Expanded(
-                        child: Center(
-                          child: Text(
-                            joke.value,
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context).textTheme.headline5,
-                          ),
+                      ScaleButton(
+                        onTap: () {
+                          // we need to simultaneously initiate a new future
+                          // and rebuild this view
+                          setState(() {
+                            fetchContent();
+                          });
+                        },
+                        child: Icon(
+                          Icons.refresh,
+                          size: 60,
+                          color: Theme.of(context).primaryColor,
                         ),
                       ),
                     ],
                   );
-                },
-              ),
+                }
+
+                ChuckNorrisJoke joke = snapshot.data!;
+                String categories = joke.categories.isEmpty
+                    ? 'no categories'
+                    : joke.categories.join(', ');
+
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    const SizedBox(height: 18),
+                    Text(
+                      '[ $categories ]',
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.headline5?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                    ),
+                    const SizedBox(height: 18),
+                    Expanded(
+                      child: Center(
+                        child: Text(
+                          joke.value,
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.headline5,
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              },
             ),
           ),
         ),
@@ -146,6 +143,7 @@ class _JokeCardState<Source extends JokesSource> extends State<JokeCard> {
     future?.cancel();
     result = null;
     said = false;
+    print('fetch $hashCode');
     future = CancelableOperation.fromFuture(
       Future(() async {
         while (true) {
@@ -158,6 +156,7 @@ class _JokeCardState<Source extends JokesSource> extends State<JokeCard> {
                 widget.onFutureCompleted!(result!);
               });
               said = true;
+              print('resaid $hashCode');
             }
             return result!;
           } catch (e) {

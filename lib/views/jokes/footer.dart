@@ -1,9 +1,9 @@
 import 'dart:math';
 
 import 'package:cnj/controllers/jokes_controller.dart';
-import 'package:cnj/views/scale_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:scale_button/scale_button.dart';
 
 class JokesFooter extends GetView<JokesController> {
   const JokesFooter({Key? key}) : super(key: key);
