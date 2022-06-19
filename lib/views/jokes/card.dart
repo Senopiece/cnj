@@ -136,6 +136,13 @@ class _JokeCardState<Source extends JokesSource> extends State<JokeCard> {
     }
   }
 
+  @override
+  void dispose() {
+    futureId++;
+    _updates.cancel();
+    super.dispose();
+  }
+
   /// Important: do not forget to whap it with setState if you call it
   /// not from initState or didChangeDependencies methods
   void fetchContent() {
@@ -161,7 +168,7 @@ class _JokeCardState<Source extends JokesSource> extends State<JokeCard> {
             });
             said = true;
           }
-            return fetched;
+          return fetched;
         }
 
         try {
@@ -198,12 +205,5 @@ class _JokeCardState<Source extends JokesSource> extends State<JokeCard> {
         fetchContent();
       });
     });
-  }
-
-  @override
-  void dispose() {
-    futureId++;
-    _updates.cancel();
-    super.dispose();
   }
 }
