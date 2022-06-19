@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:async/async.dart';
 import 'package:cnj/datatypes/jokes_source.dart';
 import 'package:cnj/models/chuck_norris_joke.dart';
 import 'package:flutter/material.dart';
@@ -26,8 +25,8 @@ class JokeCard<Source extends JokesSource> extends StatefulWidget {
 class _JokeCardState<Source extends JokesSource> extends State<JokeCard> {
   final source = Get.find<Source>();
   late final StreamSubscription<void> _updates;
-
-  CancelableOperation<ChuckNorrisJoke>? future;
+  Future<ChuckNorrisJoke>? future;
+  int futureId = 0;
   ChuckNorrisJoke? result;
   bool said = false;
 
@@ -45,8 +44,8 @@ class _JokeCardState<Source extends JokesSource> extends State<JokeCard> {
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: FutureBuilder(
-              future: future!
-                  .value, // it is important to do set state after each fetchContent(), because we need to update this future
+              future:
+                  future!, // it is important to do set state after each fetchContent(), because we need to update this future
               builder: (context, AsyncSnapshot<ChuckNorrisJoke?> snapshot) {
                 if (snapshot.connectionState != ConnectionState.done) {
                   return const CircularProgressIndicator();
@@ -138,36 +137,54 @@ class _JokeCardState<Source extends JokesSource> extends State<JokeCard> {
   }
 
   /// Important: do not forget to whap it with setState if you call it
-  /// not from initState didChangeDependencies or build methods
+  /// not from initState or didChangeDependencies methods
   void fetchContent() {
-    future?.cancel();
     result = null;
     said = false;
-    print('fetch $hashCode');
-    future = CancelableOperation.fromFuture(
-      Future(() async {
-        while (true) {
-          try {
-            result = await source.getNextJoke();
+    futureId++;
+    future = Future(() async {
+      // fid is a unique identifier that tells that we listen to this future if
+      // fid == futureId, otherwise it means that the future was cancelled,
+      // and there is no matter what to return, but we need to return as
+      // fast as it can be
+      // (dart has no future.cancel() logic, so there is a crunch)
+      int fid = futureId;
+      ChuckNorrisJoke? fetched;
+      while (fid == futureId) {
+        if (fetched != null) {
+          result = fetched;
+          if (widget.onFutureCompleted != null) {
             assert(said == false);
-            if (widget.onFutureCompleted != null) {
-              Future(() async {
-                // schedule into another future to isolate if it fails
-                widget.onFutureCompleted!(result!);
-              });
-              said = true;
-              print('resaid $hashCode');
-            }
-            return result!;
-          } catch (e) {
-            if (!widget.autoRetry) {
-              rethrow;
-            }
-            assert(result == null);
+            Future(() async {
+              // schedule into another future to isolate if it fails
+              widget.onFutureCompleted!(result!);
+            });
+            said = true;
           }
+            return fetched;
         }
-      }),
-    );
+
+        try {
+          fetched = await source.getNextJoke();
+        } catch (e) {
+          if (!widget.autoRetry && fid == futureId) {
+            // do not throw error if it's cancelled
+            rethrow;
+          }
+          assert(fetched == null);
+        }
+      }
+
+      // as it does not matter in this case what to return,
+      // we just need to return something
+      return const ChuckNorrisJoke(
+        categories: [],
+        iconUrl: '',
+        id: '',
+        url: '',
+        value: '',
+      );
+    });
   }
 
   @override
@@ -185,7 +202,7 @@ class _JokeCardState<Source extends JokesSource> extends State<JokeCard> {
 
   @override
   void dispose() {
-    future?.cancel();
+    futureId++;
     _updates.cancel();
     super.dispose();
   }

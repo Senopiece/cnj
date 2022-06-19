@@ -21,7 +21,6 @@ dependencies:
   connectivity_plus: ^2.3.4
   firebase_crashlytics: ^2.8.2
   firebase_core: ^1.18.0
-  async: ^2.8.2
 
   scale_button:
     git:
