@@ -1,6 +1,6 @@
 # Chuck Norris jokes
 
-*Assignment 1 CPMDWithF course.*
+*Assignment 1/2 CPMDWithF course.*
 
 A simple app for entertainment purposes, I dunno what to say more.
 
