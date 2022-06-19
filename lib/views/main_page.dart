@@ -28,7 +28,6 @@ class MainPage extends GetView<MainPageController> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             categoriesButton,
-            favoritesButton,
           ],
         ),
       );
@@ -44,23 +43,6 @@ class MainPage extends GetView<MainPageController> {
             ),
             const Icon(
               Icons.keyboard_arrow_down_rounded,
-              size: 33,
-            ),
-          ],
-        ),
-      );
-
-  Widget get favoritesButton => ScaleButton(
-        onTap: controller.gotoFavorites,
-        child: Row(
-          children: [
-            Text(
-              'favorites',
-              textAlign: TextAlign.right,
-              style: Get.theme.textTheme.headline5?.copyWith(fontSize: 25),
-            ),
-            const Icon(
-              Icons.keyboard_arrow_right_rounded,
               size: 33,
             ),
           ],

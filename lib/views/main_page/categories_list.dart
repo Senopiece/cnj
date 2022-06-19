@@ -85,7 +85,7 @@ class CategoriesList extends GetView<CategoriesListController> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
+              padding: const EdgeInsets.fromLTRB(0, 14, 0, 14),
               child: GetBuilder<CategoriesListController>(
                 builder: (context) {
                   return Row(
@@ -107,7 +107,7 @@ class CategoriesList extends GetView<CategoriesListController> {
                           ),
                         ),
                       ),
-                      const SizedBox(width: 45),
+                      const SizedBox(width: 50),
                       ScaleButton(
                         onTap: controller.approve,
                         child: Container(
