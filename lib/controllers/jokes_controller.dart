@@ -34,7 +34,6 @@ class JokesController extends GetxController {
                 likeSwipeDirection ? SwipeDirection.right : SwipeDirection.left,
             ignoreOnWillMoveNext: true,
           );
-          reset();
         },
       );
     }
@@ -52,14 +51,11 @@ class JokesController extends GetxController {
     }
   }
 
-  void reset() {
-    liked = false;
-    topContent = null;
-    update([0]);
-  }
-
-  void updateTopContent(ChuckNorrisJoke newTopContent) {
-    topContent = newTopContent;
-    update([0]);
+  void updateTopContent(ChuckNorrisJoke? newTopContent) {
+    if (liked != false || topContent != newTopContent) {
+      liked = false;
+      topContent = newTopContent;
+      update([0]);
+    }
   }
 }

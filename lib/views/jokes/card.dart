@@ -9,13 +9,13 @@ import 'package:scale_button/scale_button.dart';
 /// Note that this is the only class that uses vanilla
 /// state management as it is most suitable this case
 class JokeCard<Source extends JokesSource> extends StatefulWidget {
-  final void Function(ChuckNorrisJoke)? onFutureCompleted;
+  final void Function(ChuckNorrisJoke?)? futureStatus;
   final bool autoRetry;
 
   const JokeCard({
     Key? key,
     this.autoRetry = true,
-    this.onFutureCompleted,
+    this.futureStatus,
   }) : super(key: key);
 
   @override
@@ -27,8 +27,17 @@ class _JokeCardState<Source extends JokesSource> extends State<JokeCard> {
   late final StreamSubscription<void> _updates;
   Future<ChuckNorrisJoke>? future;
   int futureId = 0;
-  ChuckNorrisJoke? result;
-  bool said = false;
+  ChuckNorrisJoke? _result;
+
+  set result(ChuckNorrisJoke? val) {
+    _result = val;
+    Future(() async {
+      // schedule into another future to isolate if it fails
+      if (widget.futureStatus != null) {
+        widget.futureStatus!(_result);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -118,22 +127,7 @@ class _JokeCardState<Source extends JokesSource> extends State<JokeCard> {
   @override
   void didUpdateWidget(JokeCard oldWidget) {
     super.didUpdateWidget(oldWidget);
-    // so no matter how many widgets you update,
-    // only one callback would be invoked
-    // Note that here are two types of how it can be invoked:
-    // - only the most first callback would be invoked if it was setup after
-    //   the future completes, all the others would be ignored
-    // - only the latest callback would be invoked if it was setup before
-    //   the future completes, all the others would be ignored
-    if (result != null) {
-      if (widget.onFutureCompleted != null && !said) {
-        Future(() async {
-          // schedule to say only after the building is completed
-          widget.onFutureCompleted!(result!);
-        });
-        said = true;
-      }
-    }
+    result = _result;
   }
 
   @override
@@ -147,7 +141,6 @@ class _JokeCardState<Source extends JokesSource> extends State<JokeCard> {
   /// not from initState or didChangeDependencies methods
   void fetchContent() {
     result = null;
-    said = false;
     futureId++;
     future = Future(() async {
       // fid is a unique identifier that tells that we listen to this future if
@@ -160,14 +153,6 @@ class _JokeCardState<Source extends JokesSource> extends State<JokeCard> {
       while (fid == futureId) {
         if (fetched != null) {
           result = fetched;
-          if (widget.onFutureCompleted != null) {
-            assert(said == false);
-            Future(() async {
-              // schedule into another future to isolate if it fails
-              widget.onFutureCompleted!(result!);
-            });
-            said = true;
-          }
           return fetched;
         }
 

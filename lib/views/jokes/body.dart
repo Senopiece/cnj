@@ -18,17 +18,11 @@ class JokesBody<Source extends JokesSource> extends GetView<JokesController> {
         swipeAnchor: SwipeAnchor.bottom,
         controller: controller.swiper,
         allowVerticalSwipe: false,
-        onWillMoveNext: (i, d) {
-          bool canSwipe = controller.canSwipe;
-          if (canSwipe) {
-            controller.reset();
-          }
-          return canSwipe;
-        },
+        onWillMoveNext: (i, d) => controller.canSwipe,
         builder: (context, properties) {
           double opacity = 0;
           Duration duration = const Duration(milliseconds: 0);
-          void Function(ChuckNorrisJoke)? onContentUpdated;
+          void Function(ChuckNorrisJoke?)? onContentUpdated;
 
           if (properties.stackIndex == 0) {
             opacity = 1;
@@ -43,7 +37,7 @@ class JokesBody<Source extends JokesSource> extends GetView<JokesController> {
               duration: duration,
               child: JokeCard<Source>(
                 autoRetry: properties.stackIndex != 0,
-                onFutureCompleted: onContentUpdated,
+                futureStatus: onContentUpdated,
               ),
             ),
           );
