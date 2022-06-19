@@ -23,7 +23,6 @@ class CategoriesList extends GetView<CategoriesListController> {
               }
 
               if (snapshot.hasError) {
-                // TODO: test
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
