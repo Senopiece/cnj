@@ -9,9 +9,15 @@ class JokesController extends GetxController {
   late final SwipableStackController swiper;
   bool likeSwipeDirection = false;
   bool liked = false;
+  bool isForceDisabled = false;
   ChuckNorrisJoke? topContent;
 
   bool get canSwipe => topContent != null && !liked;
+
+  void dismissForceDisable() {
+    isForceDisabled = false;
+    update([0]);
+  }
 
   @override
   void dispose() {
@@ -19,8 +25,13 @@ class JokesController extends GetxController {
     swiper.dispose();
   }
 
+  void forceDisable() {
+    isForceDisabled = true;
+    update([0]);
+  }
+
   void like() {
-    if (topContent != null && !liked) {
+    if (topContent != null && !liked && !isForceDisabled) {
       liked = true;
       update([1]);
 
@@ -34,6 +45,7 @@ class JokesController extends GetxController {
                 likeSwipeDirection ? SwipeDirection.right : SwipeDirection.left,
             ignoreOnWillMoveNext: true,
           );
+          forceDisable();
         },
       );
     }
@@ -46,7 +58,7 @@ class JokesController extends GetxController {
   }
 
   Future<void> openInBrowser() async {
-    if (topContent != null) {
+    if (topContent != null && !isForceDisabled) {
       await launchUrl(Uri.parse(topContent!.url));
     }
   }

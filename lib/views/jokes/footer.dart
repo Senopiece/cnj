@@ -20,7 +20,9 @@ class JokesFooter extends GetView<JokesController> {
             child: Icon(
               Icons.open_in_browser_rounded,
               size: 35,
-              color: controller.topContent == null ? Colors.grey : Colors.black,
+              color: controller.topContent == null || controller.isForceDisabled
+                  ? Colors.grey
+                  : Colors.black,
             ),
           ),
           const SizedBox(width: 50),
@@ -32,11 +34,15 @@ class JokesFooter extends GetView<JokesController> {
 
               // assert liked implies topContent exist
               assert(!controller.liked || controller.topContent != null);
-              if (controller.liked) {
-                color = Colors.deepOrangeAccent;
-                turns = -0.003 * 2 * pi;
-              } else if (controller.topContent == null) {
+              if (controller.isForceDisabled) {
                 color = Colors.grey;
+              } else {
+                if (controller.liked) {
+                  color = Colors.deepOrangeAccent;
+                  turns = -0.003 * 2 * pi;
+                } else if (controller.topContent == null) {
+                  color = Colors.grey;
+                }
               }
 
               return AnimatedRotation(

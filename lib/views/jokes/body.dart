@@ -18,7 +18,13 @@ class JokesBody<Source extends JokesSource> extends GetView<JokesController> {
         swipeAnchor: SwipeAnchor.bottom,
         controller: controller.swiper,
         allowVerticalSwipe: false,
-        onWillMoveNext: (i, d) => controller.canSwipe,
+        onSwipeCompleted: (i, d) {
+          controller.dismissForceDisable();
+        },
+        onWillMoveNext: (i, d) {
+          controller.forceDisable();
+          return controller.canSwipe;
+        },
         builder: (context, properties) {
           double opacity = 0;
           Duration duration = const Duration(milliseconds: 0);

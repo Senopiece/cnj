@@ -8,13 +8,35 @@ class CategoriesListController extends GetxController {
   final _jokesSource = Get.find<RandomJokesSource>();
   final _chuck = Get.find<ChuckNorrisAPI>();
 
+  late final Set<String> selectedCategories = Set.from(_jokesSource.categories);
   late Future<List<String>> futureCategories;
-  late final StreamSubscription<void> _updates;
-  Set<String> get selectedCategories => _jokesSource
-      .categories; // so we do not subscribe on categories update as we assume that only this class can modify it at a time
+
+  bool categoriesLoaded = false;
+
+  void approve() {
+    if (categoriesLoaded) {
+      _jokesSource.categories = selectedCategories;
+      Get.back();
+    }
+  }
+
+  void cancel() {
+    Get.back();
+  }
+
+  @override
+  void onInit() {
+    super.onInit();
+    refreshFutureCategories();
+  }
 
   void refreshFutureCategories() {
+    assert(!categoriesLoaded);
     futureCategories = _chuck.categoriesList;
+    futureCategories.then((value) {
+      categoriesLoaded = true;
+      update();
+    });
     update();
   }
 
@@ -23,21 +45,6 @@ class CategoriesListController extends GetxController {
     if (!selectedCategories.remove(category)) {
       selectedCategories.add(category);
     }
-    _jokesSource.categories = selectedCategories;
-  }
-
-  @override
-  void onClose() {
-    _updates.cancel();
-    super.onClose();
-  }
-
-  @override
-  void onInit() {
-    super.onInit();
-    futureCategories = _chuck.categoriesList;
-    _updates = _jokesSource.updateStream.listen((event) {
-      update();
-    });
+    update();
   }
 }
